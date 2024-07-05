@@ -7,7 +7,6 @@ from shiny import App, Inputs, Outputs, Session, module, render, ui
 @module.ui
 def rag_ui():
 
-    
     # Define UI ----
     page_dependencies = ui.tags.head(
         ui.include_css("./www/style.css")
@@ -39,7 +38,7 @@ def rag_ui():
             ui.output_ui("response"),
             fill=True
             ), 
-        ui.TagList(
+       
         ui.card(
             ui.row(
                 ui.column(
@@ -63,8 +62,7 @@ def rag_ui():
                 )
             ),
             fill=False  
-            )
-        ),
+            ),
         ui.help_text("Chat GPT can make mistakes. Consider checking important information.",
                      style = "text-align: center")
     )
@@ -76,14 +74,13 @@ def rag_ui():
             "Retrieval Augmented Generation",
             ui.layout_sidebar(
                 page_sidebar,
-                page_main,
-                fill=True,
-                fillable=True
+                page_main
             )
         ),
         ui.nav_spacer(),
         ui.nav_control(ui.tags.div("The Defence Economist", id = "right_title")),
-        title = "Knowledge Base"
+        title = "Knowledge Base",
+        fillable = True
         )
       
     return app_ui

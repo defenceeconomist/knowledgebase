@@ -11,3 +11,5 @@ RAG can improve the quality, accuracy, and relevance of the text output for vari
 3. Generate: Finally, the retrieval-augmented prompt is fed to the LLM. This implementation uses OpenAI ChatGPT 3.5.
 
 Figure 1: Retrieval Augmented Generation Workflow
+
+![](.\\www\\fig_1.png)
