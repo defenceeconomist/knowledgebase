@@ -5,6 +5,9 @@ from ragui.about import about_ui
 @module.server
 def rag_server(input: Inputs, output: Outputs, session: Session):
     
+    chat_history_md: reactive.Value[str] = reactive.Value("Test")
+    chat_string: reactive.Value[str] = reactive.Value("")
+    
     # Show a modal when the about cog is clicked.
     @reactive.Effect
     @reactive.event(input.info, ignore_init=True, ignore_none=True)
@@ -22,8 +25,7 @@ def rag_server(input: Inputs, output: Outputs, session: Session):
     def _():
       return ""
     
-    chat_history_md: reactive.Value[str] = reactive.Value("Test")
-    chat_string: reactive.Value[str] = reactive.Value("")
+    
     
     @output
     @render.ui

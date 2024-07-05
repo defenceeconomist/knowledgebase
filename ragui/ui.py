@@ -78,7 +78,23 @@ def rag_ui():
             )
         ),
         ui.nav_spacer(),
-        ui.nav_control(ui.tags.div("The Defence Economist", id = "right_title")),
+        ui.nav_control(ui.tags.a("The Defence Economist")),
+         ui.nav_menu(
+            "Menu",
+            ui.nav_control(
+                ui.a(
+                    "Settings",
+                    href="https://shiny.posit.co/py/",
+                    target="_blank",
+                ),
+              ui.a(
+                    "Logout",
+                    href="https://posit.co",
+                    target="_blank",
+                )
+            ),
+            align="right",
+        ),
         title = "Knowledge Base",
         fillable = True
         )
