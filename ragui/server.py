@@ -4,6 +4,10 @@ from ragui.about import about_ui
 
 @module.server
 def rag_server(input: Inputs, output: Outputs, session: Session):
+  
+    logged_in: reactive.Value(False)
+  
+  
     
     chat_history_md: reactive.Value[str] = reactive.Value("Test")
     chat_string: reactive.Value[str] = reactive.Value("")
