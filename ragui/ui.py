@@ -24,12 +24,6 @@ def rag_ui():
                 "about Defence, Economics and Evaluation.",
                 style = "display: block-inline",
                 class_ = "help-block"
-            ),
-            ui.input_action_link(
-                id = "settings",
-                label = None,
-                icon = cogs,
-                title = "Settings"
                 )
             )
     
