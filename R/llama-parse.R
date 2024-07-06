@@ -1,3 +1,4 @@
+#' Function to use llama parse api
 
 get_env_var <- function(x = "LLAMA_CLOUD_API_KEY", file = ".env"){
   dot_env <- readLines(".env")
@@ -6,9 +7,9 @@ get_env_var <- function(x = "LLAMA_CLOUD_API_KEY", file = ".env"){
 }
 
 
-parse <- function(file = "data-raw/tmp.pdf", api_key = get_env_var("LLAMA_CLOUD_API_KEY")){
+parse_up <- function(filepath = "data-raw/example.pdf", api_key = get_env_var("LLAMA_CLOUD_API_KEY")){
   
-  f <- httr::upload_file(file, type = "application/pdf")
+  f <- httr::upload_file(filepath, type = "application/pdf")
   
   req <- httr::POST(
     url = 'https://api.cloud.llamaindex.ai/api/parsing/upload',
@@ -17,8 +18,7 @@ parse <- function(file = "data-raw/tmp.pdf", api_key = get_env_var("LLAMA_CLOUD_
       `Content-Type`= "multipart/form-data",
       Authorization = glue::glue("Bearer {api_key}")
     ),
-    body = list(file = f),
-    httr::verbose()
+    body = list(file = f)
   )
   
   httr::content(req)
@@ -55,14 +55,41 @@ get_markdown <- function(job_id =  "e778beda-74bd-4f55-a700-beafed677556",
   results
 }
 
-results$job_metadata
 
-
-semantic_split <- function(x){
-  sts <- reticulate::import("semantic_text_splitter")
-  splitter <- sts$TextSplitter$from_tiktoken_model(model = "gpt-3.5-turbo", capacity = 400L)
-  sapply(x, function(y){splitter$chunks(y)})
+llama_parse <- function(filepath = "data-raw/example.pdf",
+                        api_key = get_env_var("LLAMA_CLOUD_API_KEY"),
+                        timeout = 60){
+  
+  info <- pdftools::pdf_info(filepath)
+  
+  if(info$pages >=750) stop("Only 750 pages per file")
+  
+  req <- parse_up(filepath, api_key)
+  
+  i <- 1
+  results <- list()
+  while(i < timeout){
+    
+    Sys.sleep(1)
+    i <- i+1
+    
+    if(check_status(req$id, api_key)$status=="SUCCESS") {
+      results <- get_markdown(req$id, api_key) 
+      break
+      }
+  }
+  
+  if(!length(results)){
+    return("Job timed out without a successful response") 
+  } else return(results)
+  
 }
+
+
+
+
+
+
 # 
 # df <- dplyr::tibble(text = results$markdown |>
 #                 stringr::str_split("\n") |>
