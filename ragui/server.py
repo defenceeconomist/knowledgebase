@@ -24,6 +24,7 @@ openai_ef = embedding_functions.OpenAIEmbeddingFunction(
 collection = chromaclient.get_collection(name="defecon-kb", embedding_function=openai_ef)
 
 
+
 @module.server
 def rag_server(input: Inputs, output: Outputs, session: Session, config):
   
@@ -54,7 +55,8 @@ def rag_server(input: Inputs, output: Outputs, session: Session, config):
         results = collection.query(
             query_texts = [input.query()],
             n_results = 10
-            )       
+            ) 
+        print(results)
         return results
     
 
@@ -91,7 +93,7 @@ def rag_server(input: Inputs, output: Outputs, session: Session, config):
              "=======" +
              "\n Answer:"}
             ]
-        
+        print(messages)
         for resp in openaiclient.chat.completions.create(
             model=model(),
             messages = messages,
