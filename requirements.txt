@@ -1,0 +1,6 @@
+shiny
+chromadb
+openai
+langchain-chroma==0.1.2
+langchain-core==0.2.1
+langchain_openai==0.1.14

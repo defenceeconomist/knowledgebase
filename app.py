@@ -1,9 +1,11 @@
 from shiny import Inputs, Outputs, Session, App, ui, module, reactive
 from kbutils.helpers import load_config
+from kbutils.langchain_chroma import connect_vectordb
 from ragmodule.rag_server import rag_server
 from ragmodule.rag_ui import rag_ui
 
 config = load_config("config.yaml")
+vector_db = connect_vectordb()
 
 # Shiny Application
 app_ui = ui.page_navbar(   
@@ -17,7 +19,10 @@ app_ui = ui.page_navbar(
         rag_ui("rag")
     ),
     ui.nav_spacer(),
-    ui.nav_control(ui.tags.a("The Defence Economist")),
+    ui.nav_control(
+       ui.tags.a("The Defence Economist",  
+                 href = "https://defenceeconomist.github.io")
+                 ),
     title = "Knowledge Base",
     fillable = True
     )
