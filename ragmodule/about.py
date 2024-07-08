@@ -1,9 +1,8 @@
-from shiny import App, Inputs, Outputs, Session, module, render, ui, reactive
-
+from shiny import  ui
 
 def about_ui():
   # ' generate the about UI
-   with open('./ragui/about.md', "r") as f:
+   with open('./ragmodule/about.md', "r") as f:
     about_md = " ".join(f.readlines())
     
     return ui.TagList(
