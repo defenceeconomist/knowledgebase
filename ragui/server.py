@@ -1,9 +1,6 @@
-from shiny import App, Inputs, Outputs, Session, module, render, ui, reactive
-from pathlib import Path
+from shiny import Inputs, Outputs, Session, module, render, ui, reactive
 from ragui.about import about_ui
 
-import chromadb
-from chromadb.utils import embedding_functions
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -13,15 +10,6 @@ from typing import AsyncGenerator
 
 load_dotenv()
 openaiclient = OpenAI()
-
-# Connect to Vector Database
-chromaclient = chromadb.PersistentClient(path="chromadb")
-openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-                api_key=os.getenv("OPENAI_API_KEY"),
-                model_name="text-embedding-ada-002"
-                )
-
-collection = chromaclient.get_collection(name="defecon-kb", embedding_function=openai_ef)
 
 
 
@@ -127,5 +115,3 @@ def rag_server(input: Inputs, output: Outputs, session: Session, config):
             ), 
             ui.markdown(chat_history_md() + chat_string())
             )
-            
-    
