@@ -4,7 +4,7 @@ This is a retrieval augmented generation application to query a custom knowledge
 
 It uses OpenAI for text embeddings and generation. 
 
-It uses ChromaDB for Vector Storage and retrieval.
+It uses ChromaDB for vector storage and retrieval.
 
 It is deployed to ShinyApps.io following the set up guidance here
 
