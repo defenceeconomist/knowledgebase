@@ -1,4 +1,4 @@
-from shiny import Inputs, Outputs, Session, App, ui, module, reactive
+from shiny import Inputs, Outputs, Session, App, ui
 from kbutils.helpers import load_config
 from kbutils.langchain_chroma import connect_vectordb
 from ragmodule.rag_server import rag_server
@@ -28,7 +28,7 @@ app_ui = ui.page_navbar(
     )
       
 def server(input: Inputs, output: Outputs, session: Session):
-   rag_server("rag")
+   rag_server("rag", config=config, vectordb=vector_db)
 
 app = App(app_ui, server)
 

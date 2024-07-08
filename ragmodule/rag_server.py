@@ -2,7 +2,7 @@ from shiny import Inputs, Outputs, Session, module, ui, reactive
 from ragmodule.about import about_ui
 
 @module.server
-def rag_server(input: Inputs, output: Outputs, session: Session):
+def rag_server(input: Inputs, output: Outputs, session: Session, config, vectordb):
   
     # Show a modal when the about link is clicked.
     @reactive.effect
