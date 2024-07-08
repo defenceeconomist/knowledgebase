@@ -1,20 +1,15 @@
-#kb-ask{
+#ask{
   padding-left: 12px;
   padding-right: 12px;
   padding-top: 6px;
   padding-bottom: 6px;
 }
 
-#kb-right_title{
+#right_title{
 
   align-items: center;
 }
 
-#kb-settings_modal{
-  height: 40vh;
-  overflow: auto;
-}
-
-#kb-query{
+#query{
   max-height: 125px;
 }
