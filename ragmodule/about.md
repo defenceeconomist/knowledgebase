@@ -12,4 +12,4 @@ RAG can improve the quality, accuracy, and relevance of the text output for vari
 
 Figure 1: Retrieval Augmented Generation Workflow
 
-![](.\\www\\fig_1.png)
+![](fig_1.png)
