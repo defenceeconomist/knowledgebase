@@ -14,3 +14,5 @@ def rag_server(input: Inputs, output: Outputs, session: Session, config, vectord
                 size = "l"
                 )
             )
+    
+    
