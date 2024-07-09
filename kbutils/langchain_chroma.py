@@ -22,7 +22,7 @@ vector_db = connect_vectordb()
 # [x] Remembering previous question
 # [ ] Citations
 # [ ] Streaming
-# [ ] Cache
+# [x] Cache
  
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import LLMChainExtractor
