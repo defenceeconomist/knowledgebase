@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 import yaml
-import re
 
 load_dotenv()
 
