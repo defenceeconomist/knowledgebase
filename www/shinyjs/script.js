@@ -4,7 +4,6 @@ function getCookies(){
 }
 
 Shiny.addCustomMessageHandler('cookie-set', function(msg){
-    console.log(msg);
     Cookies.set(msg.name, msg.value);
     getCookies();
 })
