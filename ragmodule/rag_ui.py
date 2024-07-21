@@ -18,7 +18,6 @@ def rag_ui():
                 )
             )
 
-        
     page_main = ui.TagList(
         ui.card(
             ui.output_ui("response"),

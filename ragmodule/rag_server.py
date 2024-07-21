@@ -27,3 +27,8 @@ def rag_server(input: Inputs, output: Outputs, session: Session, vectordb, llm, 
             llm = llm, 
             redis_cons = redis_cons
             ))
+    
+    # Show the chat history as markdown (ui.response)
+    # Fetch the history from redis
+    # Format it
+

@@ -16,4 +16,3 @@ def load_config(
     config["REDIS_API_KEY"] = redis_api_key
     
     return(config)
-

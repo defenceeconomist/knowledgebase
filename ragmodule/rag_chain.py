@@ -68,11 +68,6 @@ def rag_chain(query, vectordb, llm, redis_cons):
   return(conversational_rag_chain.invoke(
     {"input": query},
     config={
-        "configurable": {"session_id": "abc123"}
+        "configurable": {"session_id": "abc123"} # TODO Generate a session id based on user cookie
     },  # constructs a key "abc123" in `store`.
     )["answer"])
-
-
-
-   
- 
