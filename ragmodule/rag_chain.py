@@ -9,7 +9,7 @@ from langchain.globals import set_llm_cache
 from langchain_community.chat_message_histories import RedisChatMessageHistory
 from langchain_community.cache import RedisCache
 
-def rag_chain(query, vectordb, llm, redis_cons):
+def rag_chain(query, vectordb, llm, redis_cons, session_id):
   
   set_llm_cache(RedisCache(redis_cons["redis_client"]))
   retriever = vectordb.as_retriever()
@@ -54,20 +54,22 @@ def rag_chain(query, vectordb, llm, redis_cons):
 
   question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
   rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain) 
-
+  history = RedisChatMessageHistory(
+        session_id, url=redis_cons["redis_url"]
+    )
   conversational_rag_chain = RunnableWithMessageHistory(
     rag_chain,
-    lambda session_id: RedisChatMessageHistory(
-        session_id, url=redis_cons["redis_url"]
-    ),
+    lambda session_id: history,
     input_messages_key="input",
     history_messages_key="chat_history",
     output_messages_key="answer",
     )
   
-  return(conversational_rag_chain.invoke(
+  conversational_rag_chain.invoke(
     {"input": query},
     config={
-        "configurable": {"session_id": "abc123"} # TODO Generate a session id based on user cookie
+        "configurable": {"session_id": session_id} # TODO Generate a session id based on user cookie
     },  # constructs a key "abc123" in `store`.
-    )["answer"])
+    )["answer"]
+  
+  return(history)

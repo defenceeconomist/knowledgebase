@@ -41,9 +41,13 @@ def server(input: Inputs, output: Outputs, session: Session):
     async def _():
         if not "kb_token" in input.cookies():
             msg = {"name": "kb_token", "value": secrets.token_urlsafe(16)}
-            await session.send_custom_message("cookie-set", msg) 
+            await session.send_custom_message("cookie-set", msg)       
+        else:
+            vals.set(input.cookies()['kb_token'])
             
-    rag_server("rag", vectordb=vectordb, llm=llm, redis_cons = redis_cons)
+    rag_server("rag", vectordb=vectordb, llm=llm, 
+               redis_cons = redis_cons, 
+               token = vals)
 
 app_dir = Path(__file__).parent
 app = App(app_ui, server,  static_assets=app_dir / "www")
