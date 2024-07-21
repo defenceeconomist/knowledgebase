@@ -19,7 +19,8 @@ redis_cons = get_redis_connections(config = config)
 app_ui = ui.page_navbar(
     # https://stackoverflow.com/questions/77047019/http-1-1-404-not-found-when-reading-external-js-and-css-file-in-shiny-python
     ui.head_content(ui.include_js(Path(__file__).parent / "www" / "shinyjs" / "script.js", defer = "")), 
-    ui.head_content(ui.include_js(Path(__file__).parent / "www" / "cookies" / "js.cookie.min.js")),
+    ui.head_content(ui.include_js(Path(__file__).parent / "www" / "cookies" / "js.cookie.min.js", defer = "")),
+    ui.head_content(ui.include_css(Path(__file__).parent / "www" / "style.css")),
     # RAG Module UI
     ui.nav_panel(
         "Retrieval Augmented Generation",
