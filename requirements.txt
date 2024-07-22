@@ -1,7 +1,7 @@
-shiny
-chromadb
-openai
-langchain-chroma==0.1.2
-langchain-core==0.2.1
-langchain_openai==0.1.14
-lanchain_community==0.2.7
+langchain==0.2.10
+langchain_community==0.2.9
+langchain_core==0.2.22
+python-dotenv==1.0.1
+PyYAML==6.0.1
+redis==5.0.7
+shiny==0.10.2
