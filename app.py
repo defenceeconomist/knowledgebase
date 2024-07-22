@@ -12,6 +12,18 @@ from ragmodule.rag_server import rag_server
 
 from pathlib import Path
 
+async def set_login_cookie(session, redis, user):
+    # generate a selector, validator token and save as a cookie
+    selector = secrets.token_urlsafe(6)
+    validator = secrets.token_urlsafe(32)
+    token = selector + ":" + validator
+    await session.send_custom_message("cookie-set", {"name": "kb_token", "value": token})
+
+    # upload selector and hashed validator to redis
+    hashed_validator = bcrypt.hashpw(validator.encode("utf-8"), bcrypt.gensalt())
+    redis.hset("tokens", mapping = {selector:hashed_validator})
+    redis.hset("user_token", mapping = {selector:user})
+
 # Load Config, LLM Client, Connect to Vector Database, Redis Connection Strings
 config = load_config()
 vectordb = connect_vectordb(config = config)
@@ -31,9 +43,10 @@ app_ui = ui.page_fillable(
 
 def server(input: Inputs, output: Outputs, session: Session):
 
-    vals = reactive.value()
+    user = reactive.value()
     logged_in = reactive.value(False)
 
+    # Render main UI if logged in and display login panel if not logged in
     @render.ui
     def content():
         if logged_in():
@@ -59,33 +72,42 @@ def server(input: Inputs, output: Outputs, session: Session):
                 offset = 4
                 )
             )
-
-    @reactive.effect
-    async def _():
-        if not "kb_token" in input.cookies():
-            msg = {"name": "kb_token", "value": secrets.token_urlsafe(16)}
-            await session.send_custom_message("cookie-set", msg)       
-        else:
-            vals.set(input.cookies()['kb_token'])
-    
+        
+    # When login button is pressed check username and password against database
+    # If login is successful change the logged_in reactive value
+    # and set a token
     @reactive.effect
     @reactive.event(input.login_button)
-    def _():
-        # check password for user against encrypted database.
+    async def _():
         users = redis_cons["redis_client"].hgetall("users")
         if input.username().encode('utf-8') in users:
             stored_hash =  users[input.username().encode('utf-8')]
             if bcrypt.checkpw(input.password().encode('utf-8'), stored_hash):
-                logged_in.set(True)
+                await set_login_cookie(session, redis_cons["redis_client"], input.username())  
             else:
                 print("Incorrect password")
         else:
             print("Incorrect user")
 
-            
+    # Observe changes in kb_token cookie. If the token is validated then login.
+    @reactive.effect
+    def _():
+        if "kb_token" in input.cookies():
+            token = input.cookies()["kb_token"]
+            selector = token.split(":")[0]
+            validator = token.split(":")[1]
+            tokens = redis_cons["redis_client"].hgetall("tokens")
+            user_token = redis_cons["redis_client"].hgetall("user_token")
+            hashed_validator = tokens[selector.encode("utf-8")]
+            if bcrypt.checkpw(validator.encode("utf-8"), hashed_validator):
+                logged_in.set(True)
+                user.set(user_token[selector.encode("utf-8")].decode())
+                print(f'Welcome {user_token[selector.encode("utf-8")].decode()}')
+
+    # Load RAG Server Module    
     rag_server("rag", vectordb=vectordb, llm=llm, 
                redis_cons = redis_cons, 
-               token = vals)
+               user = user)
 
 app_dir = Path(__file__).parent
 app = App(app_ui, server,  static_assets=app_dir / "www")
