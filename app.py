@@ -18,24 +18,31 @@ llm = langchain_openai(config = config)
 redis_cons = get_redis_connections(config = config)
 
 # Define App UI (ui components are modular)
-app_ui = ui.page_navbar(
-    # https://stackoverflow.com/questions/77047019/http-1-1-404-not-found-when-reading-external-js-and-css-file-in-shiny-python
+app_ui = ui.page_fillable(
+       # https://stackoverflow.com/questions/77047019/http-1-1-404-not-found-when-reading-external-js-and-css-file-in-shiny-python
     ui.head_content(ui.include_js(Path(__file__).parent / "www" / "shinyjs" / "script.js", defer = "")), 
     ui.head_content(ui.include_js(Path(__file__).parent / "www" / "cookies" / "js.cookie.min.js", defer = "")),
     ui.head_content(ui.include_css(Path(__file__).parent / "www" / "style.css")),
-    # RAG Module UI
-    ui.nav_panel(
+    ui.output_ui("content",fillable=True),
+    gap = ui.css.as_css_unit(0),
+    padding = ui.css.as_css_padding(0)
+    )
+
+def server(input: Inputs, output: Outputs, session: Session):
+
+    vals = reactive.value()
+
+    @render.ui
+    def content():
+        return(ui.page_navbar(
+        ui.nav_panel(
         "Retrieval Augmented Generation",
         rag_ui("rag")
     ),
     ui.nav_spacer(),
     ui.nav_control(ui.tags.a("The Defence Economist")),
     title = "Knowledge Base",
-    fillable = True
-    )
-      
-def server(input: Inputs, output: Outputs, session: Session):
-    vals = reactive.value()
+    fillable = True))
 
     @reactive.effect
     async def _():
